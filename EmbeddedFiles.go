@@ -3,6 +3,7 @@ package main
 var PageIndex string
 var cssIndex string
 var cssTwo string
+var NewCatForm string
 
 func FileStore() {
 	// Add data to the variables here
@@ -15,4 +16,5 @@ func FileStore() {
 	cssTwo = "@charset \"utf-8\"; /* unvisited link */ a:link { color: white; } /* visited link */a:visited { color: white; } /* mouse over link */a:hover { color: white; } /* selected link */a:active { color: white; } html, body { } .container { overflow: auto; } table { width: 800px; border-collapse: collapse; overflow: hidden; box-shadow: 0 0 20px rgba(0,0,0,0.1); } th, td { padding: 15px; background-color: rgba(255,255,255,0.1); color: #fff; } th { text-align: left; } thead th { background-color: #202020; } tbody tr:hover { background-color: rgba(255,255,255,0.2); } tbody td { position: relative; } tbody td:hover:before { content: \"\"; position: absolute; left: 0; right: 0; top: -9999px; bottom: -9999px; background-color: rgba(255, 255, 255, 0.1); z-index: -1; } "
 	//
 	//
+	NewCatForm = "<center><h1 style=\"color:white;\">New Category</h1>                <div class=\"container\">                    <br>                    <form method=\"POST\">                        <table>                            <thead>                                <tr>                                    <th>                                        <h2 style=\"color:white;\">Type</h2></th>                                    <th>                                        <h2 style=\"color:white;\">Value</h2></th>                                </tr>                            </thead>                            <tbody>                                <tr>                                    <td>                                        <h3 style=\"color:white;\">Category Name:</h3></td>                                    <td>                                        <input type=\"textbox\" name=\"CatName\" id=\"CatName\" placeholder=\"Category Name\" style=\"display: inline-block;\">                                    </td>                                </tr>                            </tbody>                        </table>                        <br>                        <input type=\"submit\" value=\"Create Category\"> </form> 						</div></center>"
 }

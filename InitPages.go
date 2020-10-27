@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"html/template"
 	"net/http"
 )
 
@@ -11,12 +12,18 @@ func InitPages() {
 	http.HandleFunc("/", DeterminPage)
 	// Handles Editing a category and Making a new category
 	http.HandleFunc("/NewCategory/", NewCategory)
-	http.HandleFunc("/EditCategory/", EditCategory)
+	http.HandleFunc("/EditCategory/", EditOrAsk)
 	// define the css pages - these are static pages that are needed for the web page to load properly.
 	http.HandleFunc("/assets/css/styles.css", stylesCss)
 	http.HandleFunc("/assets/css/styles2.css", styles2Css)
 	// handle a favicon request with a 404 cannot be found.
 	http.HandleFunc("/favicon.ico", favicon)
+}
+
+// struct needed for parsing the pages
+type PageStruct struct {
+	Data        template.HTML
+	ProjectName string
 }
 
 // when called a css header is added to the page and then the css code is returned

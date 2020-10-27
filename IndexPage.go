@@ -10,11 +10,6 @@ import (
 	"strconv"
 )
 
-type PageStruct struct {
-	Data        template.HTML
-	ProjectName string
-}
-
 func IndexPage(w http.ResponseWriter, r *http.Request) {
 	// This function is called when there is a get request for the index page.
 	// GetCategories - gets all the categories in the categories directory

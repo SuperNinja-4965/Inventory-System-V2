@@ -17,11 +17,7 @@ func StartUp() {
 		err := os.Mkdir(ExecPath+"/data", 0755)
 		check(err)
 		// Creates an example category
-		f, err := os.Create(ExecPath + "/data/Example.csv")
-		b := bufio.NewWriter(f)
-		b.WriteString("\"1\",\"item1\",\"100f\",100,10,\"This is a cool item, and it always will be.\"")
-		b.Flush()
-		f.Close()
+		CreateCategory("Example")
 	}
 	// creates the https folder where the user can add the files needed for https.
 	if _, err := os.Stat(ExecPath + "/HTTPS-key"); os.IsNotExist(err) {
