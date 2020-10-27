@@ -10,7 +10,7 @@ import (
 func EditOrAsk(w http.ResponseWriter, r *http.Request) {
 	// if nothing was posted display the index page. "r.URL.Path" is used to determin the url path
 	// Removes the / at the beginning of the string to help with parsing.
-	URL := strings.Replace(r.URL.Path, "/", "", 1)
+	URL := strings.Replace(r.URL.Path, "/EditCategory/", "", 1)
 	// checks to see if there is a / at the end of the string and if there is removes it.
 	// doing this ensures the program gets the correct amount of splits when the string is parsed.
 	if len(URL) >= 1 && URL[len(URL)-1] == '/' {
