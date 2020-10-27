@@ -1,6 +1,6 @@
 # Inventory-System-V2
  This is the second version of my Inventory System. <br>
- This application can be used to keep an inventory of some items <br>
+ This application can be used to keep an inventory of some items. <br>
  Compared to my first version this version uses an ID system for each item to prevent duplicate items to not work. <br>
  The CSV Files from version one are **NOT** compatible with this version. (To make them compatiable you will need to give each item an ID (in the first column))
 
