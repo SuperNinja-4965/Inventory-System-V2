@@ -9,6 +9,9 @@ import (
 func InitPages() {
 	// Define the index page that will be shown
 	http.HandleFunc("/", DeterminPage)
+	// Handles Editing a category and Making a new category
+	http.HandleFunc("/NewCategory/", NewCategory)
+	http.HandleFunc("/EditCategory/", EditCategory)
 	// define the css pages - these are static pages that are needed for the web page to load properly.
 	http.HandleFunc("/assets/css/styles.css", stylesCss)
 	http.HandleFunc("/assets/css/styles2.css", styles2Css)
