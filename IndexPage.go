@@ -5,12 +5,16 @@ import (
 )
 
 func IndexPage(w http.ResponseWriter, r *http.Request) {
-	// if something is posted to the server it will be handled here.
-	if r.Method == http.MethodPost {
+	// This function is called when there is a get request for the index page.
 
-		// if this if statement was run then do not run the code below.
-		return
+}
+
+func IndexPagePost(w http.ResponseWriter, r *http.Request) {
+	// This function is called when there is a post request.
+	if r.FormValue("search") != "" {
+		// Call the search and pass the values.
+		SearchForItem(r.FormValue("search"), "all")
+	} else {
+
 	}
-	// if nothing was posted display the index page.
-
 }
