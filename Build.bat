@@ -1,6 +1,6 @@
 go build
-move Inventory-System.exe ./bin
+move Inventory-System-V2.exe ./bin
 cd bin
-Inventory-System.exe
+Inventory-System-V2.exe
 cd ..
 PAUSE

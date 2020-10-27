@@ -35,7 +35,7 @@ func main() {
 
 	// Print the Server IP to the console as well as the server ports.
 	fmt.Println("The server ip is: " + JG.GetServerIP(0))
-	fmt.Println("The http port is: " + NonHttpsPort + ".\nAnd the https port is: " + SitePort + ".")
+	fmt.Println("The http port is: " + NonHttpsPort + "\nThe https port is: " + SitePort)
 
 	// Checks the setting to see if the user wants the browser to open when the sever starts. If they do open it.
 	if openBrowserOnLoad == true {
