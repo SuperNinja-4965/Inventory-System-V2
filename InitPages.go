@@ -7,6 +7,8 @@ import (
 
 // This function will initialise the pages needed for the web server.
 func InitPages() {
+	// Define the index page that will be shown
+	http.HandleFunc("/", IndexPage)
 	// define the css pages - these are static pages that are needed for the web page to load properly.
 	http.HandleFunc("/assets/css/styles.css", stylesCss)
 	http.HandleFunc("/assets/css/styles2.css", styles2Css)
