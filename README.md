@@ -1,11 +1,11 @@
 # Inventory-System-V2
- This is the second version of my Inventory System.
- Compared to my first version this version uses an ID system for each item to prevent duplicate items to not work.
+ This is the second version of my Inventory System. <br>
+ Compared to my first version this version uses an ID system for each item to prevent duplicate items to not work. <br>
  The CSV Files from version one are **NOT** compatible with this version. (To make them compatiable you will need to give each item an ID (in the first column))
 
 ## Download
-To download go to the releases on this project and download the latest version.
-If there is not a version for your OS or architecture then you can compile it your self by downloading the source code and compiling it yourself.
+To download go to the releases on this project and download the latest version. <br>
+If there is not a version for your OS or architecture then you can compile it yourself by downloading the source code and compiling it yourself. <br>
 I will not document here how to compile Golang Code.
 
 ## License
