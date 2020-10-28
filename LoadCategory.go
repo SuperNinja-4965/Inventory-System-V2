@@ -76,49 +76,54 @@ func GetCategories() {
 }
 
 func GetItemsInCategory(Category string) (ReturnData string) {
-	// Open the csv file
-	csvfile, err := os.Open(ExecPath + "/data/" + Category + ".csv")
-	if err != nil {
-		log.Fatalln("Couldn't open the csv file", err)
-	}
-	// Parse the file
-	r := csv.NewReader(csvfile)
-
-	// Iterate through the records
-	for {
-		// Read each record from csv
-		record, err := r.Read()
-		if err == io.EOF {
-			break
-		}
+	if _, err := os.Stat(ExecPath + "/data/" + Category + ".csv"); os.IsExist(err) {
+		// Open the csv file
+		csvfile, err := os.Open(ExecPath + "/data/" + Category + ".csv")
 		if err != nil {
-			log.Fatal(err)
+			log.Fatalln("Couldn't open the csv file", err)
 		}
+		// Parse the file
+		r := csv.NewReader(csvfile)
 
-		// store the items data into variables
-		var ItemID string = record[0]
-		var ItemName string = record[1]
-		var ItemValue string = record[2]
-		var ItemAmountAvailable string = record[3]
-		if ItemAmountAvailable == "" {
-			ItemAmountAvailable = "0"
+		// Iterate through the records
+		for {
+			// Read each record from csv
+			record, err := r.Read()
+			if err == io.EOF {
+				break
+			}
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			// store the items data into variables
+			var ItemID string = record[0]
+			var ItemName string = record[1]
+			var ItemValue string = record[2]
+			var ItemAmountAvailable string = record[3]
+			if ItemAmountAvailable == "" {
+				ItemAmountAvailable = "0"
+			}
+			var ItemInUse string = record[4]
+			if ItemInUse == "" {
+				ItemInUse = "0"
+			}
+			var ItemNotes string = record[5]
+
+			// Converting the Item amounts to Int and adding them
+			ItemAmountAvailableInt, _ := strconv.Atoi(ItemAmountAvailable)
+			ItemInUseInt, _ := strconv.Atoi(ItemInUse)
+			ItemAmountTotal := ItemAmountAvailableInt + ItemInUseInt
+
+			ReturnData = ReturnData + "<tr onclick=\"window.location='/" + Category + "/" + ItemID + "';\"><td>" + ItemName + "</td><td>" + ItemValue + "</td><td>" + ItemAmountAvailable + "</td><td>" + ItemInUse + "</td><td>" + strconv.Itoa(ItemAmountTotal) + "</td><td>" + ItemNotes + "</td></tr>"
 		}
-		var ItemInUse string = record[4]
-		if ItemInUse == "" {
-			ItemInUse = "0"
+		csvfile.Close()
+		if ReturnData == "" {
+			ReturnData = "<tr><td>No Items</td><td>ERR</td><td>ERR</td><td>ERR</td><td>ERR</td><td>ERR</td></tr>"
 		}
-		var ItemNotes string = record[5]
-
-		// Converting the Item amounts to Int and adding them
-		ItemAmountAvailableInt, _ := strconv.Atoi(ItemAmountAvailable)
-		ItemInUseInt, _ := strconv.Atoi(ItemInUse)
-		ItemAmountTotal := ItemAmountAvailableInt + ItemInUseInt
-
-		ReturnData = ReturnData + "<tr onclick=\"window.location='/" + Category + "/" + ItemID + "';\"><td>" + ItemName + "</td><td>" + ItemValue + "</td><td>" + ItemAmountAvailable + "</td><td>" + ItemInUse + "</td><td>" + strconv.Itoa(ItemAmountTotal) + "</td><td>" + ItemNotes + "</td></tr>"
+		return
+	} else {
+		ReturnData = "<tr><td>The Category does not exist.</td><td>ERR</td><td>ERR</td><td>ERR</td><td>ERR</td><td>ERR</td></tr>"
+		return
 	}
-	csvfile.Close()
-	if ReturnData == "" {
-		ReturnData = "<tr><td>No Items</td><td>ERR</td><td>ERR</td><td>ERR</td><td>ERR</td><td>ERR</td></tr>"
-	}
-	return
 }
