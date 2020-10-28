@@ -12,7 +12,7 @@ import (
 
 func LoadItem(w http.ResponseWriter, r *http.Request, Category string, ItemID string) {
 	// Search for the item and store the results into a variable.
-	ItemSearchresults, ItemName := SearchForItemInCategory(Category, ItemID)
+	ItemSearchresults, ItemName := SearchForItemInCategoryByID(Category, ItemID)
 
 	// Variable to store the data to be injected into the page
 	var PageData string = "<center><h1 style=\"color:white;\">" + Category + ": " + ItemName + " - Information</h1><div class=\"container\"><br><table><thead><tr><th>Name</th><th>Value</th><th>Amount available</th><th>Amount in use</th><th>Total amount</th><th>Notes</th></tr></thead><tbody>" + ItemSearchresults + "</tbody></table></div><br><h2 style=\"color:white;\"><a href=\"javascript:history.back()\">Back</a></h2></center>"
@@ -23,7 +23,7 @@ func LoadItem(w http.ResponseWriter, r *http.Request, Category string, ItemID st
 	t.Execute(w, p)
 }
 
-func SearchForItemInCategory(Category string, IDToSearch string) (ReturnData string, ItemName string) {
+func SearchForItemInCategoryByID(Category string, IDToSearch string) (ReturnData string, ItemName string) {
 	// Open the csv file
 	csvfile, err := os.Open(ExecPath + "/data/" + Category + ".csv")
 	if err != nil {
