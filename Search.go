@@ -181,6 +181,7 @@ func SearchForItemEverywhere(w http.ResponseWriter, r *http.Request, ItemToFind 
 	var EndPageData string = "<br><h2 style=\"color:white;\"><a href=\"javascript:history.back()\">Back</a></h2></center>"
 
 	// Send the parsed html data to the user.
+	// This will not show the partial results or full results section if one is not needed. If no results are found then show the advanced search box and a message saying so.
 	if ResultsAll != "" && PartailResultsAll != "" {
 		p := PageStruct{Data: template.HTML(BeginningPageData + ResultsAll + EndPageData + "<br><br>" + BeginningPageDataPartialResults + PartailResultsAll + EndPageData), ProjectName: ProgramName}
 		t, _ := template.New("indexTemplate").Parse(PageIndex)
