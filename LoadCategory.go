@@ -11,6 +11,8 @@ import (
 	"runtime"
 	"strconv"
 	"strings"
+
+	JG "github.com/joshuag1000/GoEssentials"
 )
 
 func LoadCategory(w http.ResponseWriter, r *http.Request, Category string) {
@@ -76,7 +78,7 @@ func GetCategories() {
 }
 
 func GetItemsInCategory(Category string) (ReturnData string) {
-	if _, err := os.Stat(ExecPath + "/data/" + Category + ".csv"); os.IsExist(err) {
+	if JG.FileExists(ExecPath + "/data/" + Category + ".csv") {
 		// Open the csv file
 		csvfile, err := os.Open(ExecPath + "/data/" + Category + ".csv")
 		if err != nil {
