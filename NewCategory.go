@@ -85,6 +85,8 @@ func CreateCategory(name string) error {
 		return errors.New("You cannot name your category that.")
 	} else if strings.ToLower(name) == "favicon.ico" {
 		return errors.New("You cannot name your category that.")
+	} else if strings.ToLower(name) == "search" {
+		return errors.New("You cannot name your category that.")
 	} else {
 		// checks to make sure that the category doesnt already exist.
 		if _, err := os.Stat(ExecPath + "/data/" + name + ".csv"); os.IsNotExist(err) {

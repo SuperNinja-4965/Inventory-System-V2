@@ -13,6 +13,8 @@ func InitPages() {
 	// Handles Editing a category and Making a new category
 	http.HandleFunc("/NewCategory/", CreateByUrlOrForm)
 	http.HandleFunc("/EditCategory/", EditOrAsk)
+	// Handles making a search for an item
+	http.HandleFunc("/Search/", SearchOrAsk)
 	// define the css pages - these are static pages that are needed for the web page to load properly.
 	http.HandleFunc("/assets/css/styles.css", stylesCss)
 	http.HandleFunc("/assets/css/styles2.css", styles2Css)

@@ -18,7 +18,7 @@ func IndexPagePost(w http.ResponseWriter, r *http.Request) {
 	// This function is called when there is a post request.
 	if r.FormValue("search") != "" {
 		// Call the search and pass the values.
-		SearchForItem(r.FormValue("search"), "all")
+		http.Redirect(w, r, "/Search/all/"+r.FormValue("search"), 303)
 	} else {
 
 	}
