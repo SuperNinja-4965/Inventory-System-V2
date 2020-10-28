@@ -17,7 +17,8 @@ func StartUp() {
 		err := os.Mkdir(ExecPath+"/data", 0755)
 		check(err)
 		// Creates an example category
-		CreateCategory("Example")
+		err := CreateCategory("Example")
+		check(err)
 	}
 	// creates the https folder where the user can add the files needed for https.
 	if _, err := os.Stat(ExecPath + "/HTTPS-key"); os.IsNotExist(err) {
