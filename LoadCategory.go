@@ -117,15 +117,15 @@ func GetItemsInCategory(Category string) (ReturnData string) {
 			ItemInUseInt, _ := strconv.Atoi(ItemInUse)
 			ItemAmountTotal := ItemAmountAvailableInt + ItemInUseInt
 
-			ReturnData = ReturnData + "<tr onclick=\"window.location='/" + Category + "/" + ItemID + "';\"><td>" + ItemName + "</td><td>" + ItemValue + "</td><td>" + ItemAmountAvailable + "</td><td>" + ItemInUse + "</td><td>" + strconv.Itoa(ItemAmountTotal) + "</td><td>" + ItemNotes + "</td></tr>"
+			ReturnData = ReturnData + "<tr onclick=\"window.location='/" + Category + "/" + ItemID + "';\"><td size=\"10%\">" + ItemName + "</td><td size=\"8%\">" + ItemValue + "</td><td size=\"6%\">" + ItemAmountAvailable + "</td><td size=\"6%\">" + ItemInUse + "</td><td size=\"6%\">" + strconv.Itoa(ItemAmountTotal) + "</td><td size=\"66%\">" + ItemNotes + "</td></tr>"
 		}
 		csvfile.Close()
 		if ReturnData == "" {
-			ReturnData = "<tr><td>No Items</td><td>ERR</td><td>ERR</td><td>ERR</td><td>ERR</td><td>ERR</td></tr>"
+			ReturnData = "<tr><td size=\"10%\">No Items</td><td size=\"8%\">ERR</td><td size=\"6%\">ERR</td><td size=\"6%\">ERR</td><td size=\"6%\">ERR</td><td size=\"66%\">ERR</td></tr>"
 		}
 		return
 	} else {
-		ReturnData = "<tr><td>The Category does not exist.</td><td>ERR</td><td>ERR</td><td>ERR</td><td>ERR</td><td>ERR</td></tr>"
+		ReturnData = "<tr><td size=\"10%\">The Category does not exist.</td><td size=\"8%\">ERR</td><td size=\"6%\">ERR</td><td size=\"6%\">ERR</td><td size=\"6%\">ERR</td><td size=\"66%\">ERR</td></tr>"
 		return
 	}
 }

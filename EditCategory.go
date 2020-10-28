@@ -113,7 +113,7 @@ func EditCategoryPost(w http.ResponseWriter, r *http.Request, Category string) s
 		// checks to see if the deletion was successful.
 		if err != nil {
 			fmt.Println(err)
-			response = "<center><h1 style=\"color:red;\">There was an error deleting that file.</h1></center>"
+			return "<center><h2 style=\"color:red;\">There was an error deleting that file.</h2></center>"
 		} else {
 			response = "<center><h1 style=\"color:red;\">Category " + Category + " Deleted.</h1></center><meta http-equiv=\"refresh\" content=\"1;url=/EditCategory/\" />"
 		}
@@ -125,7 +125,10 @@ func EditCategoryPost(w http.ResponseWriter, r *http.Request, Category string) s
 	}
 	// if the DeleteCat form value isn't set to yes then proceed to save the data as requested.
 	// Use os.Create to create a file for writing.
-	f, _ := os.Create(ExecPath + "/data/" + Category + ".csv")
+	f, err3 := os.Create(ExecPath + "/data/" + Category + ".csv")
+	if err3 != nil {
+		return "<center><h2 style=\"color:red;\">There was an error editing that file.</h2></center>"
+	}
 	// Create a new writer.
 	b := bufio.NewWriter(f)
 	// Variable for storing the biggest ID used in the category.
@@ -150,40 +153,19 @@ func EditCategoryPost(w http.ResponseWriter, r *http.Request, Category string) s
 			}
 		}
 	}
-	fmt.Println(BiggestID)
+	//
+	var ReturnString string = "<center><h2 style=\"color:green;\">File Saved.</h2></center>"
 	if r.FormValue("AddRow") == "Yes" {
 		// strconv.Atoi(r.FormValue("Count"))
 		b.WriteString("\"" + strconv.Itoa(BiggestID+1) + "\",\"item1\",\"100f\",100,10,\"This is a cool item, and it always will be.\"")
+		ReturnString = ReturnString + "<center><h2 style=\"color:green;\"> Added an Item.</h2></center>"
 	}
 	// Flush. And save the changes.
 	b.Flush()
 	f.Close()
-	return "<center><h1 style=\"color:green;\">File Saved Successfully.</h1></center>"
+	return ReturnString
 }
 
 func ChooseCatToEdit(w http.ResponseWriter, r *http.Request) {
-	// when the data is posted to the page (the Category to load) this block will redirect the user.
-	if r.Method == http.MethodPost {
-		http.Redirect(w, r, "/EditCategory/"+r.FormValue("SelectedCategory"), 303)
-		return
-	}
-	// These variables define the beginnign and end of the html block that will be injected.
-	var PreSelectHTML string = "<center><h1 style=\"color:white;\">Select a Category</h1><div class=\"container\"><br><form method=\"POST\"><table><thead><tr><th><h2 style=\"color:white;\">Type</h2></th><th><h2 style=\"color:white;\">Value</h2></th></tr></thead><tbody><tr><td><h3 style=\"color:white;\">Category:</h3></td><td><select id=\"SelectedCategory\" name=\"SelectedCategory\">"
-	var PostSelectHTML string = "</select></td></tr></tbody></table><br><input type=\"submit\" value=\"Select Category\"> </form></div></center>"
-	var MiddleSelectHTML string = ""
-	// Refreshed the categories array.
-	GetCategories()
-	// loops through all the categories and adds them to the option list for the user to select from.
-	if len(Categories) != 0 {
-		for i := 0; i <= len(Categories)-1; i++ {
-			MiddleSelectHTML = MiddleSelectHTML + " <option value=\"" + Categories[i] + "\">" + Categories[i] + "</option>"
-		}
-	} else {
-		// if there aren't any categories then set the middle section to mothing.
-		MiddleSelectHTML = ""
-	}
-	// Sends the parsed data (beginning, middle and end) to the user.
-	p := PageStruct{Data: template.HTML(PreSelectHTML + MiddleSelectHTML + PostSelectHTML), ProjectName: ProgramName}
-	t, _ := template.New("indexTemplate").Parse(PageIndex)
-	t.Execute(w, p)
+	DisplayCatsBoxes(w, r, "EditCategory")
 }

@@ -11,6 +11,25 @@ import (
 )
 
 func IndexPage(w http.ResponseWriter, r *http.Request) {
+	DisplayCatsBoxes(w, r, "")
+}
+
+func IndexPagePost(w http.ResponseWriter, r *http.Request) {
+	// This function is called when there is a post request.
+	if r.FormValue("search") != "" {
+		// Call the search and pass the values.
+		SearchForItem(r.FormValue("search"), "all")
+	} else {
+
+	}
+}
+
+// Simple Function that can be used to format the items/GetCategories
+func ItemView(link string, name string, details string) string {
+	return "<li class=\"folders\"><a href=\"" + link + "\" title=\"files/\"" + name + "\" class=\"folders\"><span class=\"icon folder full\"></span><span class=\"name\">" + name + "</span><span class=\"details\">" + details + "</span></a></li>"
+}
+
+func DisplayCatsBoxes(w http.ResponseWriter, r *http.Request, URLExtra string) {
 	// This function is called when there is a get request for the index page.
 	// GetCategories - gets all the categories in the categories directory
 	GetCategories()
@@ -40,7 +59,11 @@ func IndexPage(w http.ResponseWriter, r *http.Request) {
 			}
 			// close the csv file and add the info to the page data variable.
 			csvfile.Close()
-			PageData = PageData + ItemView("/"+Categories[i], Categories[i], "Amount of items: "+strconv.Itoa(count))
+			if URLExtra == "" {
+				PageData = PageData + ItemView("/"+Categories[i], Categories[i], "Amount of items: "+strconv.Itoa(count))
+			} else {
+				PageData = PageData + ItemView("/"+URLExtra+"/"+Categories[i], Categories[i], "Amount of items: "+strconv.Itoa(count))
+			}
 		}
 	} else {
 		PageData = ItemView("/", "No Cats Found", "I Cannot find any cats. :(")
@@ -50,19 +73,4 @@ func IndexPage(w http.ResponseWriter, r *http.Request) {
 	p := PageStruct{Data: template.HTML(PageData), ProjectName: ProgramName}
 	t, _ := template.New("indexTemplate").Parse(PageIndex)
 	t.Execute(w, p)
-}
-
-func IndexPagePost(w http.ResponseWriter, r *http.Request) {
-	// This function is called when there is a post request.
-	if r.FormValue("search") != "" {
-		// Call the search and pass the values.
-		SearchForItem(r.FormValue("search"), "all")
-	} else {
-
-	}
-}
-
-// Simple Function that can be used to format the items/GetCategories
-func ItemView(link string, name string, details string) string {
-	return "<li class=\"folders\"><a href=\"" + link + "\" title=\"files/\"" + name + "\" class=\"folders\"><span class=\"icon folder full\"></span><span class=\"name\">" + name + "</span><span class=\"details\">" + details + "</span></a></li>"
 }
