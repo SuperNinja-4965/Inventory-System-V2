@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"encoding/csv"
 	"fmt"
 	"html/template"
@@ -78,13 +79,13 @@ func EditCategory(w http.ResponseWriter, r *http.Request, Category string) {
 				log.Fatal(err)
 			}
 			// Form the html for the table.
-			var RowDelTemplate string = "<tr><td><input type=\"checkbox\" id=\"" + strconv.Itoa(count) + "-0\" name=\"" + strconv.Itoa(count) + "-0\" value=\"yes\" disabled>"
-			var RowTemplate1 string = "</td><td><input disabled id=\"" + record[0] + "-ID\" name=\"" + record[0] + "-ID\" size=\"4%\" style=\"background-color:transparent;color:white;border:0;\" value=\"" + record[0]
-			var RowTemplate2 string = "\"></td><td><input id=\"" + record[0] + "-Name\" name=\"" + record[0] + "-Name\" size=\"10%\" style=\"background-color:transparent;color:white;border:0;\" value=\"" + record[1]
-			var RowTemplate3 string = "\"></td><td><input id=\"" + record[0] + "-Value\" name=\"" + record[0] + "-Value\" size=\"6%\" style=\"background-color:transparent;color:white;border:0;\" value=\"" + record[2]
-			var RowTemplate4 string = "\"></td><td><input id=\"" + record[0] + "-AmountAvailable\" name=\"" + record[0] + "-AmountAvailable\" size=\"6%\" style=\"background-color:transparent;color:white;border:0;\" value=\"" + record[3]
-			var RowTemplate5 string = "\"></td><td><input id=\"" + record[0] + "-AmountInUse\" name=\"" + record[0] + "-AmountInUse\" size=\"6%\" style=\"background-color:transparent;color:white;border:0;\" value=\"" + record[4]
-			var RowTemplate6 string = "\"></td><td><input id=\"" + record[0] + "-Note\" name=\"" + record[0] + "-Note\" size=\"66%\" style=\"background-color:transparent;color:white;border:0;\" value=\"" + record[5]
+			var RowDelTemplate string = "<tr><td><input type=\"checkbox\" id=\"" + strconv.Itoa(count) + "-Del\" name=\"" + strconv.Itoa(count) + "-Del\" value=\"yes\" disabled>"
+			var RowTemplate1 string = "</td><td><input disabled size=\"4%\" style=\"background-color:transparent;color:white;border:0;\" value=\"" + record[0] + "\"><input type=\"hidden\" id=\"" + strconv.Itoa(count) + "-ID\" name=\"" + strconv.Itoa(count) + "-ID\" style=\"background-color:transparent;color:white;border:0;\" value=\"" + record[0]
+			var RowTemplate2 string = "\"></td><td><input id=\"" + strconv.Itoa(count) + "-Name\" name=\"" + strconv.Itoa(count) + "-Name\" size=\"10%\" style=\"background-color:transparent;color:white;border:0;\" value=\"" + record[1]
+			var RowTemplate3 string = "\"></td><td><input id=\"" + strconv.Itoa(count) + "-Value\" name=\"" + strconv.Itoa(count) + "-Value\" size=\"6%\" style=\"background-color:transparent;color:white;border:0;\" value=\"" + record[2]
+			var RowTemplate4 string = "\"></td><td><input id=\"" + strconv.Itoa(count) + "-AmountAvailable\" name=\"" + strconv.Itoa(count) + "-AmountAvailable\" size=\"6%\" style=\"background-color:transparent;color:white;border:0;\" value=\"" + record[3]
+			var RowTemplate5 string = "\"></td><td><input id=\"" + strconv.Itoa(count) + "-AmountInUse\" name=\"" + strconv.Itoa(count) + "-AmountInUse\" size=\"6%\" style=\"background-color:transparent;color:white;border:0;\" value=\"" + record[4]
+			var RowTemplate6 string = "\"></td><td><input id=\"" + strconv.Itoa(count) + "-Note\" name=\"" + strconv.Itoa(count) + "-Note\" size=\"66%\" style=\"background-color:transparent;color:white;border:0;\" value=\"" + record[5]
 			var RowTemplateEnd string = "\"></td></tr>"
 			// conbined all the variables into one.
 			OutputData = OutputData + RowDelTemplate + RowTemplate1 + RowTemplate2 + RowTemplate3 + RowTemplate4 + RowTemplate5 + RowTemplate6 + RowTemplateEnd
@@ -123,8 +124,41 @@ func EditCategoryPost(w http.ResponseWriter, r *http.Request, Category string) s
 		return "#CATDELETED#"
 	}
 	// if the DeleteCat form value isn't set to yes then proceed to save the data as requested.
-
-	return ""
+	// Use os.Create to create a file for writing.
+	f, _ := os.Create(ExecPath + "/data/" + Category + ".csv")
+	// Create a new writer.
+	b := bufio.NewWriter(f)
+	// Variable for storing the biggest ID used in the category.
+	var BiggestID int = 0
+	// looping through each record
+	CountAsInt, _ := strconv.Atoi(r.FormValue("Count"))
+	if CountAsInt != 0 {
+		CountAsInt = CountAsInt - 1
+	}
+	for i := 0; i <= CountAsInt; i++ {
+		// Check to see if the record needs to be deleted. if it does then do not save its info.
+		if r.FormValue(strconv.Itoa(i)+"-Del") != "yes" {
+			b.WriteString("\"" + r.FormValue(strconv.Itoa(i)+"-ID") + "\",")
+			b.WriteString("\"" + r.FormValue(strconv.Itoa(i)+"-Name") + "\",")
+			b.WriteString("\"" + r.FormValue(strconv.Itoa(i)+"-Value") + "\",")
+			b.WriteString(r.FormValue(strconv.Itoa(i)+"-AmountAvailable") + ",")
+			b.WriteString(r.FormValue(strconv.Itoa(i)+"-AmountInUse") + ",")
+			b.WriteString("\"" + r.FormValue(strconv.Itoa(i)+"-Note") + "\"\n")
+			ID, _ := strconv.Atoi(r.FormValue(strconv.Itoa(i) + "-ID"))
+			if ID > BiggestID {
+				BiggestID = ID
+			}
+		}
+	}
+	fmt.Println(BiggestID)
+	if r.FormValue("AddRow") == "Yes" {
+		// strconv.Atoi(r.FormValue("Count"))
+		b.WriteString("\"" + strconv.Itoa(BiggestID+1) + "\",\"item1\",\"100f\",100,10,\"This is a cool item, and it always will be.\"")
+	}
+	// Flush. And save the changes.
+	b.Flush()
+	f.Close()
+	return "<center><h1 style=\"color:green;\">File Saved Successfully.</h1></center>"
 }
 
 func ChooseCatToEdit(w http.ResponseWriter, r *http.Request) {
