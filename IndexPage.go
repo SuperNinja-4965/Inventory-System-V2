@@ -68,7 +68,10 @@ func DisplayCatsBoxes(w http.ResponseWriter, r *http.Request, URLExtra string) {
 	} else {
 		PageData = ItemView("/", "No Cats Found", "I Cannot find any cats. :(")
 	}
-
+	// if there is an extra url add a back button to the bottom of the page
+	if URLExtra == "" {
+		PageData = PageData + "<center><br><h2 style=\"color:white;\"><a href=\"javascript:history.back()\">Back</a></h2></center>"
+	}
 	// Send the parsed html data to the user.
 	p := PageStruct{Data: template.HTML(PageData), ProjectName: ProgramName}
 	t, _ := template.New("indexTemplate").Parse(PageIndex)

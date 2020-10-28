@@ -97,7 +97,7 @@ func EditCategory(w http.ResponseWriter, r *http.Request, Category string) {
 		// Sending the data to the user
 		// Compiles the first and last part of the html including the table head.
 		var templatePart1 string = "<script>function EnableBoxes() {  var inputs = document.getElementsByTagName(\"input\");for(var i = 0; i < inputs.length; i++) {    if(inputs[i].type == \"checkbox\") {        inputs[i].disabled = false;     }  }} function ConfirmDelete() {  if (confirm(\"Are you sure you want to delete this category?\")) {  	document.getElementById(\"DeleteCat\").setAttribute(\"value\", \"Yes\");    document.getElementById(\"CatForm\").submit();  } else {  	document.getElementById(\"DeleteCat\").setAttribute(\"value\", \"No\"); }}</script><center><h1 style=\"color:white;\">Editing Category: " + Category + "</h1><div class=\"container\"><br><form id=\"CatForm\" method=\"POST\"><h2 style=\"color:white;\">Record Count: " + strconv.Itoa(count) + "</h2><br>" + Report + "<input type=\"hidden\" id=\"Count\" name=\"Count\" value=\"" + strconv.Itoa(count) + "\"><table><thead><tr><th>Del?</th><th>ID</th><th>Name</th><th>Value</th><th>Amount available</th><th>Amount in use</th><th>Notes</th></tr></thead><tbody>"
-		var templatePartEnd string = "</tbody></table><br><button name=\"AddRow\" type=\"submit\" value=\"Yes\">Add Item</button>  <button type=\"button\" id=\"EnableBoxesButton\" onclick=\"EnableBoxes()\">Enable Del Checkboxes</button><br><br><button style=\"color:red;\" type=\"submit\" id=\"DeleteCat\" name=\"DeleteCat\" onclick=\"ConfirmDelete()\" value=\"No\">Delete Category</button><br><br><input type=\"submit\" value=\"Save Changes\"></form></div></center>"
+		var templatePartEnd string = "</tbody></table><br><button name=\"AddRow\" type=\"submit\" value=\"Yes\">Add Item</button>  <button type=\"button\" id=\"EnableBoxesButton\" onclick=\"EnableBoxes()\">Enable Del Checkboxes</button><br><br><button style=\"color:red;\" type=\"submit\" id=\"DeleteCat\" name=\"DeleteCat\" onclick=\"ConfirmDelete()\" value=\"No\">Delete Category</button><br><br><input type=\"submit\" value=\"Save Changes\"></form></div><br><h2 style=\"color:white;\"><a href=\"javascript:history.back()\">Back</a></h2></center>"
 		// sends the data to the user.
 		p := PageStruct{Data: template.HTML(templatePart1 + OutputData + templatePartEnd), ProjectName: ProgramName}
 		t, _ := template.New("indexTemplate").Parse(PageIndex)
@@ -140,6 +140,7 @@ func EditCategoryPost(w http.ResponseWriter, r *http.Request, Category string) s
 	}
 	for i := 0; i <= CountAsInt; i++ {
 		// Check to see if the record needs to be deleted. if it does then do not save its info.
+		// this is done by looping through each item in the table and save its data into the csv file.
 		if r.FormValue(strconv.Itoa(i)+"-Del") != "yes" {
 			b.WriteString("\"" + r.FormValue(strconv.Itoa(i)+"-ID") + "\",")
 			b.WriteString("\"" + r.FormValue(strconv.Itoa(i)+"-Name") + "\",")
@@ -153,19 +154,21 @@ func EditCategoryPost(w http.ResponseWriter, r *http.Request, Category string) s
 			}
 		}
 	}
-	//
+	// report back that the data was saved successfully.
 	var ReturnString string = "<center><h2 style=\"color:green;\">File Saved.</h2></center>"
+	// if there was a request to add a row add an extra line to the file to create a new row.
 	if r.FormValue("AddRow") == "Yes" {
-		// strconv.Atoi(r.FormValue("Count"))
 		b.WriteString("\"" + strconv.Itoa(BiggestID+1) + "\",\"item1\",\"100f\",100,10,\"This is a cool item, and it always will be.\"")
+		// Report back that the item was created.
 		ReturnString = ReturnString + "<center><h2 style=\"color:green;\"> Added an Item.</h2></center>"
 	}
-	// Flush. And save the changes.
+	// Flush, save the changes and report back.
 	b.Flush()
 	f.Close()
 	return ReturnString
 }
 
 func ChooseCatToEdit(w http.ResponseWriter, r *http.Request) {
+	// call a function to display the possible categories.
 	DisplayCatsBoxes(w, r, "EditCategory")
 }
