@@ -8,9 +8,19 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+
+	JG "github.com/joshuag1000/GoEssentials"
 )
 
 func LoadItem(w http.ResponseWriter, r *http.Request, Category string, ItemID string) {
+	// Throw an error when the category requested does not exist
+	if JG.FileExists(ExecPath+"/data/"+Category+".csv") == false {
+		// Send the parsed html data to the user.
+		p := PageStruct{Data: template.HTML("<center><h1 style=\"color:white;\">" + Category + " - Information</h1><div class=\"container\"><br><table><thead><tr><th>Name</th><th>Value</th><th>Amount available</th><th>Amount in use</th><th>Total amount</th><th>Notes</th></tr></thead><tbody><tr><td size=\"10%\">The Category does not exist.</td><td size=\"8%\">ERR</td><td size=\"6%\">ERR</td><td size=\"6%\">ERR</td><td size=\"6%\">ERR</td><td size=\"66%\">ERR</td></tr></tbody></table></div><br><h2 style=\"color:white;\"><a href=\"javascript:history.back()\">Back</a></h2></center>"), ProjectName: ProgramName}
+		t, _ := template.New("indexTemplate").Parse(PageIndex)
+		t.Execute(w, p)
+		return
+	}
 	// Search for the item and store the results into a variable.
 	ItemSearchresults, ItemName := SearchForItemInCategoryByID(Category, ItemID)
 
